@@ -1,193 +1,43 @@
 # Make-It-All
 
-The best forum/to-do list thing ever!!111!111
+An internal staff app that combines a discussion forum with project task tracking, built as a university team project for a fictional company called Make-It-All.
 
-## 📋 About
+## What it does
 
-Make-It-All is a full-stack application combining forum functionality with task management features, specifically designed for internal team collaboration with role-based access control.
+- Staff sign in with a company email. Only pre-approved employees can register, and each email can hold one account.
+- Users have roles (admin, manager, project manager, technical specialist), and each role sees and can do different things.
+- A forum with topics and posts. Technical specialists, managers and admins can post; only admins can delete.
+- Project tasks: project managers create and assign tasks, and assignees update the status and time spent.
+- Managers can see every user and the tasks assigned to them.
+- A personal to-do board with To-Do, Working and Done columns and drag-and-drop between them.
 
-## 🛠️ Tech Stack
+## How it's built
 
-### Frontend
-- **React 18.3** - UI framework
-- **Vite 5.4** - Build tool and dev server
-- **React Router** - Client-side routing
+- Frontend: React 18, Vite and React Router, with a fetch-based service layer per feature (`client/src/services`).
+- Backend: Node.js and Express with a SQLite database. The schema (users, topics, posts, project tasks, to-dos) is created from a script on startup. The team planned to move to MySQL on the university servers, and an early MySQL setup is in `server/db/_mysql`.
+- Auth: passwords are hashed with bcrypt and sessions use JWTs. Two small Express middlewares, `isAuthorized` and `hasRoles(...)`, guard every forum and task route, so access rules sit next to the routes they protect.
+- Registration checks the email domain, an allowlist of staff and existing accounts before creating a user. The register form also checks password strength (8+ characters with upper and lower case, a number and a symbol).
 
-### Backend
-- **Node.js** - Runtime environment
-- **Express 4.21** - Web framework
-- **JWT** - Authentication
-- **bcryptjs** - Password hashing
+## My role
 
-## ✨ Key Features
+I wrote the login and register flow (React forms, password checks and the register endpoint), the navbar, and the app's colour scheme and dark styling. I also set up role access across the dashboard, to-dos and tasks, and seeded the test accounts used during development.
 
-### User Management
-- 🔐 **Secure Authentication** - Staff email-based login with strong password requirements
-- 👥 **Role-Based Access** - Three account types: Managers, Technical Specialists, and Project Managers
-- 🛡️ **Account Protection** - One account per employee, internal staff only
+## Run it locally
 
-### Forum System
-- 💬 **Topics & Posts** - Create topics and post discussions
-- 📤 **Post Sharing** - Share posts with team members (DM functionality)
-
-### Task Management
-- ✅ **Todo Lists** - Personal todo lists for all employees
-- 📊 **Task Allocation** - View how tasks are distributed across team
-- 📈 **Project Tracking** - Monitor project progress and resource allocation
-
-### Dashboard (Managers)
-- 📋 View task allocation across team members
-- 🎯 Track project progress
-- 👨‍💼 Assess resource sufficiency
-
-## 🏗️ Project Structure
-
-```
-Make-It-All/
-├── client/                      # React + Vite frontend
-│   ├── src/
-│   │   ├── features/           # Feature-based modules
-│   │   │   ├── auth/           # Login, Register
-│   │   │   ├── forum/          # Topics, Posts
-│   │   │   ├── todos/          # Todo management
-│   │   │   ├── dashboard/      # Analytics views
-│   │   │   └── admin/          # User management
-│   │   ├── components/         # Reusable UI components
-│   │   ├── pages/              # Page-level components
-│   │   ├── contexts/           # React contexts
-│   │   ├── hooks/              # Custom hooks
-│   │   ├── services/           # API services
-│   │   ├── utils/              # Utilities
-│   │   ├── styles/             # CSS files
-│   │   └── assets/             # Static assets
-│   ├── index.html              # HTML entry point
-│   ├── vite.config.js          # Vite configuration
-│   └── package.json
-│
-├── server/                      # Node.js + Express backend
-│   ├── routes/                 # API endpoints
-│   │   ├── auth.js             # Authentication
-│   │   ├── todos.js            # Todo management
-│   │   ├── forum.js            # Forum functionality
-│   │   └── dashboard.js        # Dashboard analytics
-│   ├── models/                 # Data models
-│   │   ├── User.js             # User with roles
-│   │   ├── Todo.js             # Todo items
-│   │   ├── Topic.js            # Forum topics
-│   │   └── Post.js             # Forum posts
-│   ├── middleware/             # Custom middleware
-│   │   └── auth.js             # JWT auth & authorization
-│   ├── validators/             # Input validation
-│   │   └── authValidator.js    # Email & password rules
-│   ├── controllers/            # Business logic
-│   ├── services/               # Service layer
-│   ├── utils/                  # Utilities
-│   ├── config/                 # Configuration
-│   ├── index.js                # Server entry point
-│   └── package.json
-│
-├── tests/                       # Test files
-│   ├── client/                 # Frontend tests
-│   └── server/                 # Backend tests
-│
-├── docs/                        # Documentation
-│   ├── PROJECT_STRUCTURE.md    # Detailed structure guide
-│   └── README.md
-│
-├── .env.example                 # Environment variables template
-├── .gitignore                   # Git ignore rules
-├── CONTRIBUTING.md              # Contribution guidelines
-├── LICENSE                      # MIT License
-└── package.json                 # Root package config
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js (v16 or higher)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Maseeek/Make-It-All.git
-   cd Make-It-All
-   ```
-
-2. Install all dependencies (root, client, and server):
-   ```bash
-   npm run install:all
-   ```
-
-3. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
-
-4. Start the development servers (both client and server):
-   ```bash
-   npm run dev
-   ```
-
-   Or start them separately:
-   ```bash
-   # Terminal 1 - Frontend (port 5173)
-   npm run dev:client
-
-   # Terminal 2 - Backend (port 3000)
-   npm run dev:server
-   ```
-
-5. Open your browser:
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:3000/api/health
-
-## 🔧 Development Scripts
+You need Node.js 16 or newer.
 
 ```bash
-# Install all dependencies
+git clone https://github.com/Maseeek/Make-It-All-Team-20.git
+cd Make-It-All-Team-20
 npm run install:all
-
-# Run both client and server concurrently
+cp .env.example .env
 npm run dev
-
-# Run client only
-npm run dev:client
-
-# Run server only
-npm run dev:server
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
 ```
 
-## 📚 Documentation
+The frontend runs at http://localhost:5173 and the API at http://localhost:3000 (health check at `/api/health`). The server seeds a few test accounts on startup; see `server/index.js`.
 
-- [Project Structure](docs/PROJECT_STRUCTURE.md) - Detailed architecture overview
-- [Client README](client/README.md) - Frontend documentation
-- [Server README](server/README.md) - Backend API documentation
-- [Contributing Guide](CONTRIBUTING.md) - How to contribute
+## Status
 
-## 🔒 Security Requirements
+This is a coursework prototype. The personal to-do board keeps its items in the browser only, and the manager analytics endpoints in `server/routes/dashboard.js` are still stubs.
 
-- Staff email validation for login
-- Strong password requirements (min 8 chars, uppercase, lowercase, number, special character)
-- JWT-based authentication
-- Role-based authorization
-- One account per employee
-- No external personnel registration
-- Data protection methods to prevent targeting individuals
-
-## 📝 Development
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to this project.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT licensed. See [LICENSE](LICENSE).
